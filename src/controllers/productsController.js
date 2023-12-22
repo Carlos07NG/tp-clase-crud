@@ -71,7 +71,9 @@ const controller = {
 	// Update - Method to update
 	update: (req, res) => {
 		// Do the magic
-		const {name, price, discount, description, category} = req.body;
+		const {name, price, discount, description, category, image} = req.body
+		
+		existsSync('public/images/products/' + image) && unlinkSync('public/images/products/' + image)
 
 		const productUpdate = products.map(product => {
 			if(product.id === +req.params.id){
@@ -80,6 +82,7 @@ const controller = {
 				product.discount=+discount
 				product.description=description.trim()
 				product.category=category
+				product.image = req.file ? req.file.filename : product.image;
 			}
 			return product
 		})
