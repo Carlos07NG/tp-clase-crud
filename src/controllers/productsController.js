@@ -1,3 +1,4 @@
+const {existsSync, unlinkSync} = require('fs')
 const fs = require('fs');
 const path = require('path');
 
@@ -38,7 +39,7 @@ const controller = {
 	store: (req, res) => {
 		// Do the magic
 		const lastID = products[products.length - 1].id;
-		const {name, price, discount,category, description} = req.body;
+		const {name, price, discount,category, description,image} = req.body;
 
 		const newProduct = {
 			id: lastID + 1,
@@ -47,7 +48,7 @@ const controller = {
 			discount: +discount,
 			category: category,
 			description: description,
-			image: "default-image.png"
+			image : req.file ? req.file.filename : null
 		}
 
 		products.push(newProduct)
@@ -92,6 +93,9 @@ const controller = {
 		// Do the magic
 		const {id} = req.params;
 	
+		const {image} = products.find(product => product.id == id);
+		existsSync('public/images/products/' + image) && unlinkSync('public/images/products/' + image)
+
 		const productsDelete = products.filter(product => product.id != id);
 	
 		fs.writeFileSync(productsFilePath,JSON.stringify(productsDelete),'utf-8')
