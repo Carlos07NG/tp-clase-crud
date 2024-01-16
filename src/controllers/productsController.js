@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const productsFilePath = path.join(__dirname, '../data/productsDataBase.json');
-const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
+// const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 
 const toThousand = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
@@ -11,6 +11,7 @@ const controller = {
 	// Root - Show all products
 	index: (req, res) => {
 		// Do the magic
+		const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 		return res.render('products',{
 			products,
 			toThousand
@@ -20,6 +21,7 @@ const controller = {
 	// Detail - Detail from one product
 	detail: (req, res) => {
 		// Do the magic
+		const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 		const product = products.find(product => product.id === +req.params.id)
 		return res.render('detail',{
 			...product,
@@ -38,6 +40,7 @@ const controller = {
 	// Create -  Method to store
 	store: (req, res) => {
 		// Do the magic
+		const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 		const lastID = products[products.length - 1].id;
 		const {name, price, discount,category, description,image} = req.body;
 
@@ -63,6 +66,7 @@ const controller = {
 	// Update - Form to edit
 	edit: (req, res) => {
 		// Do the magic
+		const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 		const product = products.find(product => product.id === +req.params.id)
 		return res.render('product-edit-form',{
 			...product
@@ -71,6 +75,7 @@ const controller = {
 	// Update - Method to update
 	update: (req, res) => {
 		// Do the magic
+		const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 		const {name, price, discount, description, category, image} = req.body
 		
 		existsSync('public/images/products/' + image) && unlinkSync('public/images/products/' + image)
@@ -95,7 +100,8 @@ const controller = {
 	destroy : (req, res) => {
 		// Do the magic
 		const {id} = req.params;
-	
+		const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
+		
 		const {image} = products.find(product => product.id == id);
 		existsSync('public/images/products/' + image) && unlinkSync('public/images/products/' + image)
 
